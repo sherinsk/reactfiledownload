@@ -24,6 +24,7 @@ const App = () => {
       }
 
       const contentDisposition = response.headers.get("Content-Disposition");
+      console.log(contentDisposition)
       let fetchedFilename = "file";
       if (contentDisposition && contentDisposition.includes("filename=")) {
         const matches = contentDisposition.match(/filename="?(.+?)"?/);
