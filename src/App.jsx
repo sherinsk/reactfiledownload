@@ -4,6 +4,7 @@ const App = () => {
   const [password, setPassword] = useState("");
   const [fileBlob, setFileBlob] = useState(null);
   const [fileType, setFileType] = useState(null);
+  const [filename, setFilename] = useState("file");
   const [error, setError] = useState(null);
 
   const fetchFile = async () => {
@@ -22,9 +23,19 @@ const App = () => {
         return;
       }
 
+      const contentDisposition = response.headers.get("Content-Disposition");
+      let fetchedFilename = "file";
+      if (contentDisposition && contentDisposition.includes("filename=")) {
+        const matches = contentDisposition.match(/filename="?(.+?)"?/);
+        if (matches && matches[1]) {
+          fetchedFilename = matches[1];
+        }
+      }
+
       const blob = await response.blob();
       setFileBlob(blob);
       setFileType(blob.type);
+      setFilename(fetchedFilename);
       setError(null);
     } catch (err) {
       setError("Failed to fetch file");
@@ -37,10 +48,6 @@ const App = () => {
 
     const fileUrl = URL.createObjectURL(new Blob([fileBlob], { type: fileType }));
 
-    const handleFileClick = () => {
-      console.log("File URL:", fileUrl);
-    };
-
     return (
       <div>
         {/* Render image if the file is an image */}
@@ -50,9 +57,8 @@ const App = () => {
               src={fileUrl}
               alt="File"
               style={{ maxWidth: "100%", maxHeight: "500px" }}
-              onClick={handleFileClick}
             />
-            <a href={fileUrl} download="file" style={{ display: "block", marginTop: "10px" }}>
+            <a href={fileUrl} download={filename} style={{ display: "block", marginTop: "10px" }}>
               Download Image
             </a>
           </div>
@@ -66,9 +72,8 @@ const App = () => {
               width="100%"
               height="500px"
               title="PDF File"
-              onClick={handleFileClick}
             ></iframe>
-            <a href={fileUrl} download="file" style={{ display: "block", marginTop: "10px" }}>
+            <a href={fileUrl} download={filename} style={{ display: "block", marginTop: "10px" }}>
               Download PDF
             </a>
           </div>
@@ -77,7 +82,7 @@ const App = () => {
         {/* Render Word document (.docx) */}
         {fileType === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" && (
           <div>
-            <a href={fileUrl} download="file.docx" style={{ display: "block", marginTop: "10px" }}>
+            <a href={fileUrl} download={filename} style={{ display: "block", marginTop: "10px" }}>
               Download Word Document
             </a>
           </div>
@@ -86,7 +91,7 @@ const App = () => {
         {/* Render Excel file (.xlsx) */}
         {fileType === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" && (
           <div>
-            <a href={fileUrl} download="file.xlsx" style={{ display: "block", marginTop: "10px" }}>
+            <a href={fileUrl} download={filename} style={{ display: "block", marginTop: "10px" }}>
               Download Excel File
             </a>
           </div>
@@ -95,7 +100,7 @@ const App = () => {
         {/* Render other file types */}
         {fileType && !fileType.startsWith("image/") && fileType !== "application/pdf" && fileType !== "application/vnd.openxmlformats-officedocument.wordprocessingml.document" && fileType !== "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" && (
           <div>
-            <a href={fileUrl} download="file" style={{ display: "block", marginTop: "10px" }}>
+            <a href={fileUrl} download={filename} style={{ display: "block", marginTop: "10px" }}>
               Download File
             </a>
           </div>
