@@ -8,7 +8,7 @@ const App = () => {
 
   const fetchFile = async () => {
     try {
-      const response = await fetch("http://localhost:3000/get-file", {
+      const response = await fetch("https://filestreambackend.onrender.com/get-file", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
