@@ -28,9 +28,10 @@ const App = () => {
 
       let fetchedFilename = "sherin";
       if (contentDisposition && contentDisposition.includes("filename=")) {
-        const matches = contentDisposition.match(/filename="?(.+?)"?/);
+        // Handle edge cases such as quotes around filename
+        const matches = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
         if (matches && matches[1]) {
-          fetchedFilename = matches[1];
+          fetchedFilename = matches[1].replace(/['"]/g, '');  // Remove any surrounding quotes
         }
       }
 
