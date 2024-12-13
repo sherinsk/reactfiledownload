@@ -4,7 +4,7 @@ const App = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
 
-  const fetchFile = async () => {// Assuming you're using a token for authentication
+  const fetchFile = async () => { 
   
     try {
       const response = await fetch("https://filestreambackend.onrender.com/get-file", {
@@ -54,14 +54,6 @@ const App = () => {
     }
   };
 
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-    if (e.target.value.length > 0) {
-      // Automatically trigger file download when password is entered
-      fetchFile();
-    }
-  };
-
   return (
     <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
       <h1>Secure File Viewer</h1>
@@ -69,9 +61,12 @@ const App = () => {
         type="password"
         placeholder="Enter password"
         value={password}
-        onChange={handlePasswordChange}
+        onChange={(e) => setPassword(e.target.value)}
         style={{ marginRight: "10px", padding: "5px" }}
       />
+      <button onClick={fetchFile} style={{ padding: "5px 10px", marginTop: "10px" }}>
+        Fetch and Download File
+      </button>
       {error && <p style={{ color: "red" }}>{error}</p>}
     </div>
   );
