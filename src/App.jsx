@@ -2,9 +2,6 @@ import React, { useState } from "react";
 
 const App = () => {
   const [password, setPassword] = useState("");
-  const [fileBlob, setFileBlob] = useState(null);
-  const [fileType, setFileType] = useState(null);
-  const [filename, setFilename] = useState("file");
   const [error, setError] = useState(null);
 
   const fetchFile = async () => {
@@ -46,7 +43,6 @@ const App = () => {
       const a = document.createElement("a");
       a.href = url;
       a.download = fetchedFilename;  // Set the filename for the download
-      a.target = "_blank";  // Optional: Open the download in a new tab
       a.click();  // Trigger the download
   
       // Clean up the URL object after download
@@ -60,6 +56,13 @@ const App = () => {
     }
   };
 
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+    if (e.target.value.length > 0) {
+      // Automatically trigger file download when password is entered
+      fetchFile();
+    }
+  };
 
   return (
     <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
@@ -68,14 +71,10 @@ const App = () => {
         type="password"
         placeholder="Enter password"
         value={password}
-        onChange={(e) => setPassword(e.target.value)}
+        onChange={handlePasswordChange}
         style={{ marginRight: "10px", padding: "5px" }}
       />
-      <button onClick={fetchFile} style={{ padding: "5px 10px" }}>
-        Fetch File
-      </button>
       {error && <p style={{ color: "red" }}>{error}</p>}
-      <div style={{ marginTop: "20px" }}>{renderFile()}</div>
     </div>
   );
 };
