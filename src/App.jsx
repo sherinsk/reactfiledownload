@@ -4,15 +4,13 @@ const App = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
 
-  const fetchFile = async () => {
-    const token = localStorage.getItem("verificationToken"); // Assuming you're using a token for authentication
+  const fetchFile = async () => {// Assuming you're using a token for authentication
   
     try {
       const response = await fetch("https://filestreambackend.onrender.com/get-file", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,  // Pass the token in Authorization header if needed
         },
         body: JSON.stringify({ password }), // Send any necessary data in the body
       });
